@@ -1,0 +1,43 @@
+[[section-rfid-door]]
+== RFID Access Control System
+=== What is it
+RFID (Radio Frequency Identification) is the use of electromagnetic fields to ientify and track objects. There are two major type of rfid tags:
+
+* Passive
+** Power to drive the rfid chip is taken from nearby readers
+* Active
+** Have a local power source. Usually have ranges exceeding 100 meters
+
+Of either of those type of tags, the end goal is the same. It sends a unique identifier to readers.
+
+=== Usage
+There are multiple usage, for pet tracking, inventory management, etc. But in our case, we make use of the IDs to authenticate users and authorize access to specific doors using a control system.
+
+=== Access Management Control System
+
+=== WIEGAND
+The Wiegand interface is a de facto wiring standard which arose from the popularity of Wiegand effect card readers in the 1980s. It is commonly used to connect a card swipe mechanism to the rest of an access control system. The sensor in such a system is often a "Wiegand wire", based on the Wiegand effect, discovered by John R. Wiegand. A Wiegand-compatible reader is normally connected to a Wiegand-compatible security panel
+
+==== Protocol
+The communications protocol used on a Wiegand interface is known as the Wiegand protocol. The original Wiegand format had one parity bit, 8 bits of facility code, 16 bits of ID code, and a trailing parity bit for a total of 26 bits. The first parity bit is calculated from the first 12 bits of the code and the trailing parity bit from the last 12 bits. However, there are a lot of non-standard implementation out there.
+
+=== Man In The Middle
+There are multple ways to clone a card and use it later, but one area that is often overloked is the wired transmition of datas from the reader to the controller. In most building, it is possible to find at least one door that is opened by a card reader yet is not opened in view of a camera. In those case, physical attack on the reader is a safe bet. There are two ways to MITM the signal from the reader to the controller.
+
+One of the main advantages to perfrom physical attack is that, while more and more system use smart card with dynamic encryption and 2-way authentication, once the data reach the reader, it is transmitted on the line to the controller using simple, and often clear text, protocols. One of such protocol is the Wiegand protocol. The attacks described here are against a wiegand inteface.
+
+==== Reader attack
+In this case, we pop open the reader in order to access the internal of it. While most readers comes with a system in place to start the alarm in case of a case opening, it is seldom used. Once opened, you usually have access to the wired that transmit to the controller. You simply install the rfidtool using t-split or jamming an extra wire in the connector and you got yourslef a cloning setup. Once wired, the rfidtool open a wireless hotspot and clone every card that is swipped on this reader. You simply download the list for cloning later. Another thing that this device can do is replay a code sent to the web interface. All those features allow MITM attack to be easy and quick. Did i mention it cost https://blog.aprbrother.com/product/esp-rfid-tool[20 USD]?
+
+==== Wire attack
+If there is a protection on the reader, or the internals are dumped in acrylics, the last remaining option
+is the wire. Fortunately for us, mosts cables running in the walls from the reader to the controller have leeway, sometime a lot of it. In those case, you can pull the connector off the wall and gain access to the cable. I don't think i need to state this, but still, remember that this is attack require the removal of the protection around the cable and the installation of a splitter on the wires, it can damage the cable and make it unusable. I show it for learning purpose, but you should not perform this in a corporate environment. For corporate tests, limit yourselves to cloning card using weaponized readers.
+
+Here is how you can connect your rfidtool:
+
+===== Arduino version
+This attack is also possible with an arduino. In this example, we will communicate the card information using serial comunication, but this could be done using a wifi shield of module.
+
+Here is the connection to an Arduino Uno:
+
+And here is the code:

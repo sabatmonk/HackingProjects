@@ -1,2 +1,2 @@
 [[section-introduction]]
-== Introduction to hardware
+== Introduction to hacking with arduino(and others)
